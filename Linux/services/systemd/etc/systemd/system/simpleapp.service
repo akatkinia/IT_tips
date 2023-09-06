@@ -1,0 +1,12 @@
+[Unit]
+Description=Simple app
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c 'su user-app -c "java /usr/local/bin/app.jar -Xms1024m -Xmx1024m -Djava.security.egd=file:/dev/./urandom -Djava.awt.headless=true -Djava.io.tmpdir=/tmp -Dspring.config.name=application &"; echo $!>/var/run/simpleapp.pid'
+ExecStop=/bin/bash -c 'kill $(cat /var/run/simpleapp.pid); rm /var/run/simpleapp.pid'
+User=root
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

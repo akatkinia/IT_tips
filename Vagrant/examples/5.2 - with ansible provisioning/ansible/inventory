@@ -1,0 +1,7 @@
+[nodes:children]
+manager
+
+[manager]
+#server1.devopsdomain ansible_host=127.0.0.1 ansible_port=20011 ansible_user=vagrant
+server1.devopsdomain ansible_host=192.168.56.11 ansible_port=22 ansible_user=vagrant
+

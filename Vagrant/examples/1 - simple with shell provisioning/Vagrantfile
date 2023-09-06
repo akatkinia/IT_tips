@@ -1,0 +1,34 @@
+Vagrant.configure("2") do |config|
+    # Image name
+    config.vm.box = "bento/ubuntu-20.04"
+    # List OS: https://app.vagrantup.com/boxes/search1
+    # Hostname
+    config.vm.hostname = "vagrant-01"
+    # Network bridge
+    # config.vm.network "public_network"
+    config.vm.network "forwarded_port", guest: 80, host: 8080
+    config.vm.network "forwarded_port", guest: 9090, host: 9090
+    config.vm.network "forwarded_port", guest: 9100, host: 9100
+    config.vm.network "forwarded_port", guest: 19999, host: 19999
+
+    config.ssh.forward_agent = true
+
+
+    config.vm.provider "virtualbox" do |v|
+        # Name VM
+        v.name = "ubuntu_devops"
+        # Customize the amount of memory on the VM:
+        v.memory = "1024"
+        # Customize the amount of CPU on the VM:
+        v.cpus = 1
+        # the VM is modified to have a host CPU execution cap of 50%, meaning that no matter how much CPU is used in the VM, no more than 50% would be used on your own host machine
+#        v.customize ["modifyvm", :id, "--cpuexecutioncap", "50"]
+        
+        # Install packages
+        config.vm.provision "shell", inline: <<-SHELL
+            echo "Upgrade system!!!"
+            sudo apt update -y
+            sudo apt install -y wget curl net-tools netdata
+        SHELL
+    end
+end

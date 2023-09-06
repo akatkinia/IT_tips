@@ -1,0 +1,55 @@
+# -*- mode: ruby -*-
+
+# Определение переменных сети и домена
+ISO = "bento/ubuntu-20.04"               # Имя образа операционной системы для виртуальных машин
+NET = "192.168.56."                      # Префикс IP-адресов сети
+DOMAIN = ".devopsdomain"                 # Доменное имя для виртуальных машин
+HOST_PREFIX = "server"                   # Префикс для имен хостов
+INVENTORY_PATH = "../ansible/inventory"  # Путь к файлу инвентаря Ansible
+
+# Список серверов, которые будут созданы
+servers = [
+  {
+    :hostname => HOST_PREFIX + "1" + DOMAIN,  # Имя хоста в формате "server1.devopsdomain"
+    :ip => NET + "11",                        # IP-адрес в формате "192.168.56.11"
+    :ssh_host => "20011",                     # Порт SSH на хостовой машине
+#    :ssh_host => "2522",
+    :ssh_vm => "22",                          # Порт SSH на виртуальной машине
+    :ram => 1024,                             # Объем оперативной памяти в МБ
+    :core => 1                                # Количество ядер процессора
+  }
+]
+
+# Конфигурация Vagrant
+Vagrant.configure(2) do |config|
+  config.vm.synced_folder ".", "/vagrant", disabled: false         # Определение синхронизированной папки -  Синхронизированная папка - это папка на вашей физической (хостовой) машине, которая синхронизируется с папкой внутри виртуальной машины.
+  
+  # Итерация по списку серверов и настройка каждой виртуальной машины
+  servers.each do |machine|
+    config.vm.define machine[:hostname] do |node|
+      node.vm.box = ISO                                            # Используемый образ операционной системы
+      node.vm.hostname = machine[:hostname]                        # Устанавливаем имя хоста виртуальной машины
+      node.vm.network "private_network", ip: machine[:ip]          # Настройка частной сети и IP-адреса
+      node.vm.network :forwarded_port, guest: machine[:ssh_vm], host: machine[:ssh_host]  # Проброс портов
+#      node.vm.network :forwarded_port, guest: 22, host: 2522, auto_correct: false, id: "ssh"
+
+      
+      # Настройка провайдера VirtualBox для виртуальной машины
+      node.vm.provider "virtualbox" do |vb|
+        vb.gui = true
+        vb.customize ["modifyvm", :id, "--memory", machine[:ram]]  # Настройка объема оперативной памяти
+        vb.customize ["modifyvm", :id, "--cpus", machine[:core]]   # Настройка количества ядер
+        vb.name = machine[:hostname]                               # Устанавливаем имя виртуальной машины в VirtualBox
+      end
+      
+      # Настройка провижинга с использованием Ansible
+      node.vm.provision "ansible" do |setup|
+        setup.compatibility_mode = "2.0"                           # Версия Ansible для совместимости
+        setup.inventory_path = INVENTORY_PATH                      # Путь к файлу инвентаря Ansible
+        setup.playbook = "../ansible/provision.yml"                # Путь к файлу плейбука Ansible
+        setup.become = true                                        # Использовать привилегии sudo
+        setup.extra_vars = { ansible_user: 'vagrant' }             # Дополнительные переменные для Ansible
+      end
+    end
+  end
+end

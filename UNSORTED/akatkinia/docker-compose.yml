@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_DB: user1
+      POSTGRES_USER: user1
+      POSTGRES_PASSWORD: password
+    volumes:
+    - ./pg_data:/var/lib/postgresql/data
+    - ./db/init_db_script.sql:/docker-entrypoint-initdb.d/init_db.sql
+    ports:
+    - "5432:5432/tcp"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./app/
+#    restart: always
+    environment:
+      FLASK_APP: app.py
+      FLASK_ENV: development
+    ports:
+    - 5000:5000
+    depends_on:
+      db:
+        condition: service_healthy
+#    command: python3 -m flask run --host=0.0.0.0
+    command: flask run --host=0.0.0.0
+
+  nginx:
+    image: nginx:1.21.1
+    restart: always
+    depends_on:
+    - backend
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    - ./nginx/ssl/private/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
+    - ./nginx/ssl/certs/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
