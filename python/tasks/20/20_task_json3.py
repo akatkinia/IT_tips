@@ -26,3 +26,27 @@ print(decoded_text)
 
 with open('result.txt', 'w') as file:
     file.write(decoded_text)
+
+
+########## Ещё вариант
+# import json
+
+# with open('Abracadabra.txt', encoding='utf-8') as abra, open('Alphabet.json', encoding='utf-8') as alph:
+#     data = json.load(alph)
+#     text = abra.read()
+#     for i in text:
+#         print(data.get(i, i), end='')
+
+# i - это ключ, который вы передаете в функцию get. В вашем случае i - это текущий символ, который вы ищете в словаре.
+# i (после запятой) - это значение, которое будет возвращено, если ключ i отсутствует в словаре data.
+
+
+
+########## Ещё вариант
+# import json
+
+# with open("Alphabet.json") as f:
+#     key = json.load(f)
+# with open("Abracadabra.txt", encoding="utf-8") as f:
+#     txt = f.read()
+# print(txt.translate(txt.maketrans(key)))

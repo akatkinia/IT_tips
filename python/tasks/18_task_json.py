@@ -9,7 +9,7 @@ import json
 with open('manager_sales.json', 'r') as file:
     data = json.load(file)
 
-# преобразуем объект в строку в формате js`on с отступами и выведем на экран, чтобы было удобно читать файл
+# преобразуем объект в строку в формате json с отступами и выведем на экран, чтобы было удобно читать файл
 data1 = json.dumps(data, ensure_ascii=False, indent=2)
 # print(data1)
 # print(type(data1))
