@@ -11,7 +11,6 @@ def sum_digits2(arr):
             cleared = ''.join(filter(lambda char: char.isdigit() or char == ',', line)).split(',')
             cleared_int.extend([int(num) for num in cleared])  
 
-        # cleared_int = [ int(x) for x in cleared ]
         print(sum(cleared_int))
 
 

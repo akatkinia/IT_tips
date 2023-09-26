@@ -41,4 +41,4 @@ for i in range(n):
 if answer > 0:
     print('No')
 else:
-    print('Yes')
+    print('Yes')    
