@@ -506,9 +506,18 @@ Deleted tag 'v0.0' (was 287119d)
 
 ### 13.8. Создание ветки от тега
 Для создания новой ветки от этого тега: перейти к тегу командой ```git checkout <tag>```, выполнить ```git switch -c <new-branch-name>``` или ```git checkout -b <new-branch-name>```  
-Или же можем не переключаясь на тег, создать от конкретного тега ветку: ```git switch -c <new-branch-name> <tag_name>```
-
-
+Или же можем не переключаясь на тег, создать от конкретного тега ветку: ```git switch -c <new-branch-name> <tag_name>```  
   
-
+  
+## 14. Алиасы  
+Если вы не хотите печатать каждую команду для GIT целиком, вы можете настроить alias'ы для любой команды с помощью **git config**. Например:  
+```
+$ git config --global alias.co checkout
+$ git config --global alias.br branch
+$ git config --global alias.pl pull
+$ git config --global alias.ps push
+$ git config --global alias.st status
+$ git config --global alias.ci commit
+$ git config --global alias.last 'log -1 HEAD'
+```  
   
