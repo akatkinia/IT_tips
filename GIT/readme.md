@@ -592,5 +592,9 @@ $ vim index.html
   
 ### 15.5. Слияние (merge) веток  
 Перейти в ту ветку, в которую мы хотим сливать другую ветку и выполняем слияние:
+```
 $ git checkout mergebranch
 $ git merge test_branchv0.0.0
+```  
+  
+
