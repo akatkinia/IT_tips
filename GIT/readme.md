@@ -575,7 +575,8 @@ no changes added to commit (use "git add" and/or "git commit -a")
 ```
 $ vim index.html
 <<<<<<< HEAD:index.html
-<div id="footer">contact : email.support@example.com</div> =======
+<div id="footer">contact : email.support@example.com</div> 
+=======
 <div id="footer">
  please contact us at support@example.com
 </div>
