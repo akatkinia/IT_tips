@@ -659,3 +659,4 @@ $ git branch -d client $ git branch -d server
 Это серверные скрипты запускающиеся при определённых событиях  
   
 test commit 1
+test commit 2
