@@ -220,13 +220,19 @@ index 8ebb991..643e24f 100644
 ```git rebase -i HEAD~3``` - команда объеденит 3 последних коммита в один (выполняется в интерактивном режиме)  
     
 Команды для rebase в интерактивном режиме:  
-* ```p``` или ```pick``` = use commit
-* ```r``` или ```reword``` = use commit, but edit the commit message
-* ```e``` или ```edit``` = use commit, but stop for amending
-* ```s``` или ```squash``` = use commit, but meld into previous commit
-* ```f``` или ```fixup``` = like "squash", but discard this commit's log message
-* ```x``` или ```exec``` = run command (the rest of the line) using shell  
-  
+* ```p``` или ```pick``` <commit> = use commit
+* ```r``` или ```reword``` <commit> = use commit, but edit the commit message
+* ```e``` или ```edit``` <commit> = use commit, but stop for amending
+* ```s``` или ```squash``` <commit> = use commit, but meld into previous commit
+* ```f``` или ```fixup``` [-C | -c] <commit> = like "squash" but keep only the previous commit's log message, unless -C is used, in which case keep only this commit's message; -c is same as -C but opens the editor
+* ```x``` или ```exec``` <command> = run command (the rest of the line) using shell
+* ```b``` или ```break``` = stop here (continue rebase later with 'git rebase --continue')
+* ```d``` или ```drop``` <commit> = remove commit
+* ```l``` или ```label``` <label> = label current HEAD with a name
+* ```t``` или ```reset``` <label> = reset HEAD to a label
+* ```m``` или ```merge``` [-C <commit> | -c <commit>] <label> [# <oneline>] create a merge commit using the original merge commit's message (or the oneline, if no original merge commit was specified); use -c <commit> to reword the commit message
+* ```u``` или ```update-ref``` <ref> = track a placeholder for the <ref> to be updated to this position in the new commits. The <ref> is updated at the end of the rebase
+
 Подробнее о функционале rebase в п. 15.5.  
   
 ## 10. История коммитов  
