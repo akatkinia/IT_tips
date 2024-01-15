@@ -33,6 +33,8 @@
         - webserver
 ```  
 Таким образом можно выполнить плейбук только с определёнными тасками ```ansible-playbook your_playbook.yml --tags=webserver```  
+Если тегов несколько, перечисляем их через запятую: ```ansible-playbook your_playbook.yml --tags=webserver,another_tag,yet_another_tag```  
+Если хотим исключить выполнение задач, связанных с определенными тегами, используем параметр --skip-tags: ```ansible-playbook your_playbook.yml --skip-tags=tag_to_skip```  
   
 Если же необходимо как-то выделить хост чем-то похожим на метки, необходимо использовать переменные в инвентари. Например:  
 ```
@@ -56,3 +58,11 @@ web:
         state: present
       when: "'nginx' in hostvars[inventory_hostname].webserver_tag|default([])"
 ```  
+  
+Если у нас есть несколько групп, и мы хотим выполнить плейбук на хостах, которые принадлежат к нескольким группам, мы можем указать их через запятую:  
+```ansible-playbook your_playbook.yml --limit group1,group2```  
+Можно сократить до ключа -l или вовсе не указывать его: ```ansible-playbook your_playbook.yml group1,group2```  
+  
+Если у нас есть подгруппы инвентари, и мы хотим выполнить на всех хостах из подгруппы, мы также можем использовать --limit для указания подгруппы:  
+```ansible-playbook your_playbook.yml --limit your_parent_group:your_subgroup```  
+  
