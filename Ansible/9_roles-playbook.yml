@@ -1,0 +1,8 @@
+---
+- name: Install nginx server on all servers and upload html
+  hosts: all
+  become: yes
+
+
+  roles:
+    - { role: deploy_nginx, when: ansible_system == 'Linux' }

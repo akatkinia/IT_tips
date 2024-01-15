@@ -1,0 +1,45 @@
+---
+- name: blocks and when lesson
+  hosts: all
+    # become: yes
+
+  tasks:
+    - block: # блоки помогают объеденить действия
+        - name: 'when for "user" user'
+          debug:
+            msg: "Привет, {{ ansible_user }}!" # переменная с именем пользователя, от имени которого Ansible выполняет команды на удаленном хосте
+
+        - name: Get ipv4 starts with 192 in string
+          debug:
+            var: filtered_ipv4_string
+          vars:
+            filtered_ipv4_string: "{{ ansible_all_ipv4_addresses | select('match', '^192') | list | first }}"
+      when: ansible_env.USER == "user" # системная переменная USER
+
+
+    - block:
+        - name: 'when for "vagrant" user'
+          debug:
+            msg: "Здорова, {{ ansible_user }}!" # переменная с именем пользователя, от имени которого Ansible выполняет команды на удаленном хосте
+
+        - name: Get ipv4 starts with 192 in string
+          debug:
+            var: filtered_ipv4_string
+          vars:
+            filtered_ipv4_string: "{{ ansible_all_ipv4_addresses | select('match', '^192') | list | first }}"
+      when: ansible_env.USER == "vagrant"
+
+
+    - block:
+        - name: 'when for other users' # системная переменная USER
+          debug:
+            msg: "Добрый день! (подключился как {{ ansible_user }}, но переключился на {{ ansible_env.USER }} - если это 'root', вероятно become: yes)"
+
+        - name: Get ipv4 starts with 192 in string
+          debug:
+            var: filtered_ipv4_string
+          vars:
+            filtered_ipv4_string: "{{ ansible_all_ipv4_addresses | select('match', '^192') | list | first }}"
+
+      when: (ansible_env.USER != "user") and (ansible_env.USER != "vagrant")
+

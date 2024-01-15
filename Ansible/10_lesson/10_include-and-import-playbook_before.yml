@@ -1,0 +1,38 @@
+---
+- name: Include and Import lesson
+  hosts: all
+  become: yes
+
+  vars:
+    text: 'Hello world'
+
+  tasks:
+  - name: Create folder 1
+    file:
+      path: ~/lesson10/folder1
+      state: directory
+      mode: 0755
+
+  - name: Create folder 2
+    file:
+      path: ~/lesson10/folder2
+      state: directory
+      mode: 0755
+
+  - name: Create file 1
+    copy:
+      dest: ~/lesson10/file1.txt
+      content: |
+        Text1
+        Text2
+        Text3 {{ text }}
+
+  - name: Create file 2
+    copy:
+      dest: ~/lesson10/file2.txt
+      content: |
+        Text1
+        Text2
+        Text3 {{ text }}
+
+        

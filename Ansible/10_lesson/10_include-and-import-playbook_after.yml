@@ -1,0 +1,15 @@
+---
+- name: Include and Import lesson
+  hosts: all
+  become: yes
+
+  vars:
+    text: 'Hello world'
+
+  tasks:
+  - name: Create folders
+    import_tasks: create_folders.yml
+
+  - name: Create files
+    import_tasks: create_files.yml
+        

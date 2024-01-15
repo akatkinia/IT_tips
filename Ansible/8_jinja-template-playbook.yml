@@ -1,0 +1,24 @@
+---
+- name: Jinja template lesson
+  hosts: all
+  become: yes
+
+
+  vars:
+    src_folder: "./test/"
+    dest_folder: "~/test/"
+
+
+  tasks:
+  - name: Ensure test folder exists
+    file:
+      path: "{{ dest_folder }}"
+      state: directory
+      mode: 0755
+
+  - name: Generate and copy sample.html from jinja template
+    template:
+      src: "{{ src_folder }}/sample.j2"
+      dest: "{{ dest_folder }}/sample.html"
+      mode: 0644
+

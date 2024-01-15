@@ -1,0 +1,13 @@
+---
+- name: Create folder 1
+  file:
+    path: ~/lesson10/folder1
+    state: directory
+    mode: 0755
+
+- name: Create folder 2
+  file:
+    path: ~/lesson10/folder2
+    state: directory
+    mode: 0755
+

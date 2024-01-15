@@ -1,0 +1,32 @@
+---
+# tasks file for deploy_nginx
+- block: # block for ubuntu
+    - name: Update cache
+      apt:
+        update_cache: yes
+      when: ansible_facts.ansible_cache_update_failed | default(false)
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+- name: Generate index.html file
+  template:
+    src: "sample.j2"
+    dest: "{{ destin_folder }}/index.html"
+    mode: 0555
+  notify: Restart nginx  # cрабатывает только если были изменения
+
+- name: Start nginx
+  service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: copy files to hosts (with_fileglob) # используется для задания патернов
+  copy:
+    src: "{{ item }}"
+    dest: "{{ destin_folder }}"
+  with_fileglob: "*.txt"
+

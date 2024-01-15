@@ -1,0 +1,23 @@
+---
+- name: Install apache web server on all servers
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Update cache
+    apt:
+      update_cache: yes
+    when: ansible_facts.ansible_cache_update_failed | default(false)
+    tags:
+      - update_cache
+
+  - name: Install apache
+    apt: 
+      name: apache2
+      state: present
+
+  - name: Start apache
+    service: 
+      name: apache2
+      state: started
+      enabled: true

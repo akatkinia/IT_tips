@@ -1,0 +1,41 @@
+---
+- name: Install apache web server on all servers and upload html
+  hosts: all
+  become: yes
+ 
+  vars:
+    source_file: ./sample.html
+    destin_file: /var/www/html
+
+  tasks:
+  - name: Update cache
+    apt:
+      update_cache: yes
+    when: ansible_facts.ansible_cache_update_failed | default(false)
+    tags:
+      - update_cache
+
+  - name: Install apache
+    apt: 
+      name: apache2
+      state: present
+
+  - name: Copy my html
+    copy:
+      src: "{{ source_file }}"
+      dest: "{{ destin_file }}"
+      mode: 0555
+    notify: Restart apache  # cрабатывает только если были изменения
+
+  - name: Start apache
+    service: 
+      name: apache2
+      state: started
+      enabled: true
+
+
+  handlers:
+  - name: Restart apache
+    service: 
+      name: apache2
+      state: restarted

@@ -1,0 +1,50 @@
+---
+- name: Loop, With_Items, Until, With_fileglob
+  hosts: test_servers
+  become: yes
+
+  vars:
+    src_folder: ./test
+    dest_folder: ~/test
+
+  tasks:
+  - name: Loop testing (ex with-items)
+    debug:
+      msg: 'Hello, {{ item }}'
+    loop:
+      - 'Name1'
+      - 'Name2'
+      - 'Name3'
+
+
+  - name: Until testing
+    shell: echo -n 'A' >> testfile.txt && cat testfile.txt
+    register: testvar
+    delay: 2               # in seconds (optional)
+    retries: 10            # if not used == 3 by default (optional)
+    until: testvar.stdout.find('AAAAAAAAAA') == false
+
+
+  - name: print testvar
+    debug:
+      var: testvar.stdout
+
+
+  - name: Ensure test folder exists
+    file:
+      path: "{{ dest_folder }}"
+      state: directory
+      mode: 0755
+
+  - name: copy files to hosts (with_fileglob) # используется для задания патернов
+    copy:
+      src: "{{ item }}"
+      dest: "{{ dest_folder }}"
+      mode: 0555
+    with_fileglob: "{{ src_folder }}/*.txt"
+    notify:
+      - ls the folder
+
+  handlers:
+  - name: ls the folder
+    shell: ls -la ~/test # данный пример исключительно для примера, вывода handler не даст, лишь укажет на изменения (changed), это полезнее делать, например, для перезапуска сервисов

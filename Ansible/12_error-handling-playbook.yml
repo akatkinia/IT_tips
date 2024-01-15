@@ -1,0 +1,26 @@
+---
+- name: error handling lesson
+  hosts: all
+  become: yes
+  any_errors_fatal: true # если хотя бы один из хостов получит ошибку прерывается дальнейшее выполнение плейбука
+
+  tasks:
+  - name: Task number 1
+    apt:
+      name: treeeee
+      state: latest
+    ignore_errors: true
+
+  - name: Task number 2
+    shell: echo 'Hello world!'
+    register: results
+    failed_when: "results.rc == 0" # для примера. Если код возврата 0, то получить ошибку и прекратить на этом хосте дальнейшее выполнение плейбука (но если не установлено any_errors_fatal, в противном случае прерывается всё дальнейшее выполнение плейбука для всех)
+      #    failed_when: "'world' in results.stdout"
+
+  - name: yo
+    debug:
+      var: results.stdout_lines
+
+  - name: Task number 3
+    shell: echo 123
+

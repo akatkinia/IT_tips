@@ -1,0 +1,31 @@
+---
+- name: Ansible-vault lesson
+  hosts: all
+  become: yes
+
+  vars:
+    ansible_pass: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          35353965306338313734366330336333646334316630373036316362376138663439666163393539
+          3238363837306130386261306334653139636365336566610a346135623333396364363963306163
+          61343230316465633064626131303538386532376631663630616231616366373833313536373231
+          3834306563393431330a376535656362303161613238373361336365663261626563343435663831
+          6630
+
+  tasks:
+  - name: Install package tree
+    apt:
+      name: tree
+      state: latest
+
+  - name: Create config file
+    copy:
+      dest: ~/myconfig.conf
+      content: |
+        port = 9092
+        log = 7 days
+        home = /opt/kafka/bin
+        user = admin
+        password = {{ ansible_pass }}
+
+

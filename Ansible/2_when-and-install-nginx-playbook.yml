@@ -1,0 +1,27 @@
+---
+- name: Install nginx on all servers
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Update cache
+    apt:
+      update_cache: yes
+    when: ansible_facts.ansible_cache_update_failed | default(false) 
+# Переменная ansible_cache_update_failed является внутренней переменной Ansible и используется для отслеживания успешности или неуспешности операции обновления кэша пакетов на целевом узле. Эта переменная предоставляется Ansible и автоматически устанавливается в true в том случае, если операция обновления кэша не выполнена успешно
+# Использование default(false) в данном случае важно, чтобы предотвратить ошибку, если переменная ansible_cache_update_failed не определена. Оператор default(false) означает, что если переменная не определена (то есть, если её значение не установлено), то ей будет присвоено значение по умолчанию false.
+# Такой подход полезен, когда Ansible факты, которые заполняют переменные ansible_cache_update_failed, еще не были получены. Это может произойти, например, при первом выполнении playbook на новом узле, где факты еще не собраны.
+    tags:
+      - update_cache 
+# ansible-playbook -t update_cache playbook.yaml. В данном случае, указан тег update_cache, и выполнится только задача, связанная с этим тегом. Если нужно выполнить задачи с несколькими тегами, их необходимо перечислить через запятую
+
+  - name: Install nginx
+    apt: 
+      name: nginx
+      state: present
+
+  - name: Stop nginx
+    service: 
+      name: nginx
+      state: stopped
+      enabled: true

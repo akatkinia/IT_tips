@@ -1,0 +1,59 @@
+---
+- name: variables lesson
+  hosts: all
+  become: yes
+
+  vars:
+    message1: 'Hello'
+    message2: 'World'
+    secret: 'secretpassword'
+
+  tasks:
+  - name: Print secret variable
+    debug:
+      var: secret
+
+
+  - debug:
+      msg: 'Secret word is {{ secret }}'
+
+
+  - debug:
+      msg: 'This is {{ env_ver }} environment'
+
+
+  - set_fact: 
+      full_message: "{{ message1 }} {{ message2 }} from {{ env_ver }}"
+
+
+  - debug:
+      var: full_message
+      
+
+  - debug:
+      var: ansible_all_ipv4_addresses[0]
+
+
+  - name: Get ipv4 starts with 192 in list 
+    debug:
+      var: filtered_ipv4_list
+    vars:
+      filtered_ipv4_list: "{{ ansible_all_ipv4_addresses | select('match', '^192') | list }}"
+
+
+  - name: Get ipv4 starts with 192 in string
+    debug:
+      var: ipv4_string
+    vars:
+      ipv4_string: "{{ ansible_all_ipv4_addresses | select('match', '^192') | list | first }}"
+
+
+
+  - name: Get uptime from server
+    shell: uptime
+    register: results
+
+  - debug:
+      msg:
+        - "{{ results.start }}"
+        - "{{ results.stdout }}"

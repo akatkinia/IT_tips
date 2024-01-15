@@ -1,0 +1,17 @@
+---
+- name: Create file 1
+  copy:
+    dest: ~/lesson10/file1.txt
+    content: |
+      Text1
+      Text2
+      Text3 {{ text }}
+
+- name: Create file 2
+  copy:
+    dest: ~/lesson10/file2.txt
+    content: |
+      Text1
+      Text2
+      Text3 {{ text }}
+

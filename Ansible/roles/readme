@@ -1,0 +1,1 @@
+ansible-galaxy init [rolename] - инициировать новую роль. Команда исполняется в директории roles

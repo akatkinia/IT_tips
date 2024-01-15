@@ -1,0 +1,4 @@
+---
+# defaults file for deploy_nginx
+destin_folder: /var/www/html
+
